@@ -9,19 +9,10 @@ import ER from '../../components/er/er';
 
 export default class main extends Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            tipo: 0
-        }
-    }
-
     render() {
         return (
-            <div class="container">
-                <GR/>
+            <div className="container">
                 <AF/>
-                <ER/>
             </div>
         )
     }
