@@ -9,17 +9,16 @@ module.exports = class Automato {
     }
 
     isDeterministic() {
-        if(this.alphabet.includes('&')) return false
         for(let i = 0; i < this.transitions.length ; ++i) {
-            if(this.transitions[i].to.split(',').length > 1) {
-                return false
-            }
+            if(this.transitions[i].to.includes(',')) return false
         }
         return true
     }
 
     determinize() {
-        
+        if(isDeterministic()) {
+            
+        }
     }
 
 }

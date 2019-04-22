@@ -1,9 +1,9 @@
 const Automato = require('../automato')
 const Transition = require('../transition')
 
-let automato = null
 
 function test () {
+    let automato = null
     const states = [ 'q0', 'q1', 'q2', 'q3', 'q4' ]
     const alphabet = [ 'a', 'b' ]
     const transitions = [
