@@ -21,17 +21,40 @@ module.exports = class Automato {
                 let newAutomato = new Automato([fecho[0]],newAlphabet,[],fecho[0],)
                 newAutomato.states.forEach(state => {
                     let states = state.split(',')
-                    fecho.forEach(caminho => {
-                        /*Falta coisa pra caralho amanha é um novo dia*/
+                    let compareTransitions = []
+                    compareTransitions = this.transitions.filter(transition => {
+                        return states.indexOf(transition.from) > -1 && transition.symbol !== '&'
+                    })
+                    newAutomato.alphabet.forEach(symbol => {
+                        let newTransitions = compareTransitions.filter(transition => transition.symbol === symbol)
+                        let newTo = ''
+                        newTransitions.forEach(transition => {
+                            if(newTo) newTo = newTo + ',' + transition.to
+                            else newTo = transition.to
+                        })
+                        newTo = this.findToFecho(fecho,newTo)
+                        console.log(newTo)
                     })
                 })
-                
-
             } else {
 
             }
-
         }
+    }
+
+    findToFecho(fecho,to) {
+        let newTo = ''
+        let toArray = to.split(',')
+        toArray = this.organizaOrdemStates(toArray)
+        toArray.forEach(to => {
+            let index = parseInt(to.replace('q',''))
+            if(newTo) newTo = newTo + ',' + fecho[index]
+            else newTo = fecho[index]
+        })
+        newTo = newTo.split(',')
+        newTo = this.organizaOrdemStates(newTo)
+        newTo = newTo.join(',')
+        return newTo
     }
 
     isDeterministic() {
@@ -62,22 +85,29 @@ module.exports = class Automato {
                 }
             })
         }
-        fecho = this.organizaOrdem(fecho)
+        fecho = this.organizaOrdemFecho(fecho)
         return fecho
     }
 
-    organizaOrdem(states) {
+    organizaOrdemFecho(states) {
         states = states.map(state => {
             let newState = ''
             let stateSplit = state.split(',')
             for(let i = 0; i < this.states.length; i++) {
-                if(stateSplit.indexOf('q' + i) !== -1 ) {
-                    if(newState) newState = newState +','+ stateSplit[stateSplit.indexOf('q' + i)]
+                if(stateSplit.indexOf('q' + i) !== -1) {
+                    if(newState) newState = newState + ',' + stateSplit[stateSplit.indexOf('q' + i)]
                     else newState = stateSplit[stateSplit.indexOf('q' + i)]
                 }
             }
             return newState
-        }) 
+        })
         return states;
+    }
+    organizaOrdemStates(state) {
+        let newState = []
+        this.states.forEach((to,index) => {
+            if(state.indexOf('q' + index) !== -1) newState.push(state[state.indexOf('q' + index)])
+        })
+        return newState
     }
 }
