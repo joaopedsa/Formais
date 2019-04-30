@@ -18,8 +18,9 @@ module.exports = class Automato {
             if(posEpsilon !== -1) {
                 let newAlphabet = this.alphabet;
                 newAlphabet.splice(posEpsilon,1)
-                let newAutomato = new Automato([fecho[0]],newAlphabet,[],fecho[0],)
-                newAutomato.states.forEach(state => {
+                let newAutomato = new Automato([fecho[0]],newAlphabet,[],fecho[0],[])
+                for(let i = 0; i < newAutomato.states.length; i++) {
+                    const state = newAutomato.states[i]
                     let states = state.split(',')
                     let compareTransitions = []
                     compareTransitions = this.transitions.filter(transition => {
@@ -33,9 +34,14 @@ module.exports = class Automato {
                             else newTo = transition.to
                         })
                         newTo = this.findToFecho(fecho,newTo)
-                        console.log(newTo)
+                        newAutomato.transitions = [...newAutomato.transitions,new Transition(state,newTo,symbol)]
+                        if(!newAutomato.states.includes(newTo) && newTo)
+                            newAutomato.states.push(newTo)
+                        if(newTo.includes(this.finals) && newAutomato.finals.indexOf(newTo) === -1)
+                            newAutomato.finals.push(newTo)
                     })
-                })
+                }
+                console.log(newAutomato)
             } else {
 
             }
