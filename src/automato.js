@@ -15,11 +15,16 @@ module.exports = class Automato {
         // Verifica se o automato é deterministico
         if(!this.isDeterministic()) {
             const posEpsilon = this.alphabet.indexOf('&')
+            let newAutomato
             if(posEpsilon !== -1) {
                 let newAlphabet = this.alphabet;
                 newAlphabet.splice(posEpsilon,1)
-                let newAutomato = new Automato([fecho[0]],newAlphabet,[],fecho[0],[])
+                newAutomato = new Automato([fecho[0]],newAlphabet,[],fecho[0],[])
+            } else {
+                newAutomato = new Automato(this.states,this.alphabet,[],this.initial,this.finals)
+            }
                 for(let i = 0; i < newAutomato.states.length; i++) {
+                    console.log(newAutomato.states)
                     const state = newAutomato.states[i]
                     let states = state.split(',')
                     let compareTransitions = []
@@ -37,15 +42,22 @@ module.exports = class Automato {
                         newAutomato.transitions = [...newAutomato.transitions,new Transition(state,newTo,symbol)]
                         if(!newAutomato.states.includes(newTo) && newTo)
                             newAutomato.states.push(newTo)
-                        if(newTo.includes(this.finals) && newAutomato.finals.indexOf(newTo) === -1)
-                            newAutomato.finals.push(newTo)
                     })
                 }
-                console.log(newAutomato)
-            } else {
-
+                newAutomato.states.forEach(state => {
+                    newAutomato.finals.forEach(final => {
+                        if(state.includes(final) && newAutomato.finals.indexOf(state) === -1)
+                            newAutomato.finals.push(state)
+                    })
+                })
             }
         }
+    findState() {
+        let state = []
+        this.transitions.forEach(transition => {
+            if(transition.to.includes(','))
+                state.push(transition.to)
+        })
     }
 
     findToFecho(fecho,to) {
