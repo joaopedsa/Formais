@@ -1,4 +1,4 @@
-module.exports =  class Transition {
+export default class Transition {
     
     constructor(from, to, symbol) {
         this.from = from

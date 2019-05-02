@@ -1,86 +1,67 @@
-import React, { Component } from 'react';
-import Swal from 'sweetalert2';
+import React, { Component, Fragment } from 'react'
 import './af.css'
+import Automato from '../../models/automato'
+import Transition from '../../models/transition'
+import Swal from 'sweetalert2'
 
 
 export default class af extends Component {
-  
-  state = {
-    estados: [],
-    entradas: [],
-    transicoes: []
-  };
-
-  atualizaTabela = () => {
-    let transicoes = []
-    let linha = []
-    this.state.estados.forEach( estado => {
-      this.state.entradas.forEach( entrada => {
-        linha.push('')
-      })
-      transicoes.push(linha)
-      linha = []
-    })
-    this.setState({
-      transicoes: transicoes
-    })
-  }
-
-  componentDidMount() {
-    this.atualizaTabela();
-  }
-
-  popUp = async (tipo) => {
-    const {value: conjunto} = await Swal.fire({
-      title: `Insira o conjunto de ${tipo}`,
-      input: 'text',
-      inputPlaceholder: 'a,b,c,d,e,f,g',
-      inputValidator: (value) => {
-        if(!value) return "Insira um valor referente"
-      }
-    })
-    if(conjunto) {
-      if(tipo === 'Entradas') {
-        this.setState({
-          entradas: conjunto.split(',')
-        })
-      } else {
-        this.setState({
-          estados: conjunto.split(',')
-        })
-      }
+  constructor(props) {
+    super(props)
+    const states = [ 'q0', 'q1', 'q2' ]
+    const alphabet = [ 'a', 'b', 'c', '&' ]
+    const transitions = [
+    new Transition('q0', 'q0,q1', '&'),
+    new Transition('q0', '', 'a'),
+    new Transition('q0', 'q1', 'b'),
+    new Transition('q0', 'q2', 'c'),
+    new Transition('q1', '', '&'),
+    new Transition('q1', 'q0', 'a'),
+    new Transition('q1', 'q2', 'b'),
+    new Transition('q1', 'q0,q1', 'c'),
+    new Transition('q2', '', '&'),
+    new Transition('q2', '', 'a'),
+    new Transition('q2', '', 'b'),
+    new Transition('q2', '', 'c')
+    ]
+    const start = 'q0'
+    const final = [ 'q2' ]
+    this.state = {
+      automato: new Automato(states,alphabet,transitions,start,final),
     }
-    this.atualizaTabela()
   }
 
-  render() {
+  handleDeterminize = () => {
+    this.setState({automato:this.state.automato.determinize()})
+  }
+
+    render() {
     return (
       <div>
-        <button onClick={() => this.popUp('Entradas')}>Entradas</button>
-        <button onClick={() => this.popUp('Estados')}>Estados</button>
-          <table>
-            <thead>
-              <td></td>
-              {this.state.entradas.map( (entrada, key) => (
-                <td key={key}>
-                  {entrada}
-                </td>
-              ))}
-            </thead>
-            <tbody>
-              {!this.state.transicoes ? null : this.state.transicoes.map( (transicao, index,key) => (
-                <tr key={key}>
-                  <th>
-                    {this.state.estados[index]}
-                  </th>
-                  {transicao.map( (linha, key) => (
-                    <td key={key}><div>{linha}</div></td>
+        <button onClick={this.handleDeterminize}>determinize</button>
+        <div className="table">
+          <div className="headerTable">
+            <div className="cellTable">*</div>
+            {this.state.automato.alphabet.map((symbol,key) => (
+              <input className="cellTable" key={key} value={symbol}></input>
+            ))}
+          </div>
+          <div className="bodyTable">
+              {this.state.automato.states.map((state,linha) => (
+                <div className="lineTable" key={linha}>
+                  <div className="cellTable">{state}</div>
+                  {this.state.automato.alphabet.map((symbol,coluna) => (
+                    <input className="cellTable" key={coluna} value=
+                      {
+                       this.state.automato.transitions[linha*this.state.automato.alphabet.length+coluna].to
+                      }>
+                     </input>
                   ))}
-                </tr>
+                  </div>
               ))}
-            </tbody>
-          </table>
+          </div>
         </div>
+      </div>
     )
   }
 }

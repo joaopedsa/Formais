@@ -1,14 +1,22 @@
-table {
-    border-collapse: collapse;
-}
-
-table, th, td {
+.table{
     border: 1px solid black;
 }
-
-td {
-    padding: 10px;
+.headerTable {
+    display: flex;
 }
-.tabela {
-    display:flex;
+.cellTable {
+    border: 1px solid black;
+    width: 60px;
+    height: 25px;
+    text-align: center;
+}
+.containerBody {
+    display: flex;
+}
+.lineTable {
+    display:flex;   
+}
+.headerLeftTable {
+    display: flex;
+    flex-direction: column;
 }
