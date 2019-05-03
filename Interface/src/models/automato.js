@@ -51,6 +51,7 @@ export default class Automato {
                 })
                 return newAutomato
             }
+            return this
         }
     findState() {
         let state = []
@@ -78,9 +79,10 @@ export default class Automato {
     isDeterministic() {
         if(this.alphabet.indexOf('&') > -1)
             return false
-        for(let i = 0; i < this.transitions.length - 1; ++i)
-            if(this.transitions[i].to.includes(','))
+        for(let i = 0; i < this.transitions.length; ++i) {
+            if(this.states.indexOf(this.transitions[i].to) === -1 && this.transitions[i].to !== '')
                 return false
+        }
         return true
     }
 
@@ -127,5 +129,11 @@ export default class Automato {
             if(state.indexOf('q' + index) !== -1) newState.push(state[state.indexOf('q' + index)])
         })
         return newState
+    }
+
+    getTransition(from,symbol) {
+        let transition = []
+        transition = this.transitions.filter(transition => transition.from === from && transition.symbol === symbol)
+        return transition[0].to
     }
 }

@@ -35,6 +35,11 @@ export default class af extends Component {
     this.setState({automato:this.state.automato.determinize()})
   }
 
+  filterTransitions = (state,symbol) => {
+    const newState = this.state.automato.transitions.filter(transition => transition.state === state && transition.symbol === symbol)
+    return newState
+  }
+
     render() {
     return (
       <div>
@@ -52,9 +57,9 @@ export default class af extends Component {
                   <div className="cellTable">{state}</div>
                   {this.state.automato.alphabet.map((symbol,coluna) => (
                     <input className="cellTable" key={coluna} value=
-                      {
-                       this.state.automato.transitions[linha*this.state.automato.alphabet.length+coluna].to
-                      }>
+                    {
+                      this.state.automato.getTransition(state,symbol)
+                    }>
                      </input>
                   ))}
                   </div>
