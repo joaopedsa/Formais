@@ -131,9 +131,48 @@ export default class Automato {
         return newState
     }
 
-    getTransition(from,symbol) {
+    getTransition(from, symbol) {
         let transition = []
-        transition = this.transitions.filter(transition => transition.from === from && transition.symbol === symbol)
+        transition = this.transitions.filter(transition => transition.from === from && transition.symbol == symbol)
         return transition[0].to
+    }
+    setTransition(from, symbol, to) {
+        let transitions = []
+        let newAutomato = new Automato(this.states,this.alphabet,[],this.initial,this.finals)
+        transitions = this.transitions.map(transition => {
+            if(transition.from !== from || transition.symbol != symbol){
+                return transition
+            }
+            else {
+                transition.to = to
+                return transition
+            }
+        })
+        newAutomato.transitions = transitions
+        return newAutomato
+    }
+    setFinalState(state) {
+        let newAutomato = new Automato(this.states,this.alphabet,this.transitions,this.initial,[])
+        if(this.finals.indexOf(state) === -1) this.finals.push(state)
+        else this.finals = this.finals.filter(final => final !== state)
+        newAutomato.finals = this.finals
+        return newAutomato;
+    }
+    setSymbol(lastSymbol, newSymbol) {
+        let transitions = []
+        let alphabet = []
+        transitions = this.transitions.map(transition => {
+            if(transition.symbol == lastSymbol) {
+                return new Transition(transition.from,transition.to,newSymbol)
+            }
+            return transition
+        })
+        alphabet = this.alphabet.map(symbol => {
+            if(symbol == lastSymbol) {
+                return newSymbol
+            } 
+            return symbol
+        })
+        return new Automato(this.states,alphabet,transitions,this.initial,this.finals)
     }
 }

@@ -5,3 +5,20 @@
     justify-content: center;
     align-items: center;
 }
+.container-buttons-menu{
+    display:flex;
+    flex-direction: row;
+}
+.container-buttons-menu button{
+    width:33.3vw;
+    border:none;
+    outline: none;
+    border-right: 1px black solid;
+    border-bottom: 1px black solid;
+    padding: 10px;
+    cursor: pointer;
+    background: #E0DCE4;
+}
+.container-buttons-menu button:hover{
+    border-bottom: 1px #53BCAD solid;
+}
