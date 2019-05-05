@@ -1,5 +1,6 @@
 import Transition from './transition'
 import Production from './production'
+import Regular from './regular'
 
 export default class Automato {
     

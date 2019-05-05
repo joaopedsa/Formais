@@ -1,4 +1,4 @@
-module.exports =  class Regular {
+export default class Regular {
 
     contructor(nonTerminal, terminal, production, initial) {
         this.nonTerminal = nonTerminal
