@@ -18,7 +18,7 @@ export default class gr extends Component {
     return (
         <div className="container-gr">
           <div className="container-buttons-menu-af">
-            <button>Transformar para Automato Finito</button>
+            <button onClick={this.props.main.transformGramaticaToAutomato}>Transformar para Automato Finito</button>
             <button>Exportar</button>
             <div>
               <label htmlFor='selecao-arquivo'>Importar</label>

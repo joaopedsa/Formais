@@ -9,7 +9,6 @@ import Automato from '../../models/automato';
 import Regular from '../../models/regular';
 import Transition from '../../models/transition';
 import Expression from '../../models/expression'
-import Production from '../../models/production';
 
 export default class main extends Component {
     constructor(props) {
@@ -139,6 +138,13 @@ export default class main extends Component {
             this.setState({automato: newAutomato})
         }
     }
+
+    transformGramaticaToAutomato = () => {
+        let temp = this.state.regular.transformRegularToAutomato()
+        let newAutomato = new Automato(temp.states,temp.alphabet,temp.transitions,temp.initial,temp.finals)
+        this.setState({automato:newAutomato,af:true,gr:false})
+    }
+
     render() {
         let state = ''
         if(this.state.af) state = <AF main={this} automato={this.state.automato}/>
