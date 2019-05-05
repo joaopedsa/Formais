@@ -29,10 +29,13 @@ export default class Automato {
         this.transitions.forEach(transition => {
             if(transition.to)
                 if(this.finals.indexOf(transition.to) !== -1) {
-                    regular.productions.push(new Production(regular.nonTerminal[ this.states.indexOf(transition.from) ], transition.symbol +' '+ regular.nonTerminal[ this.states.indexOf(transition.to) ]))
-                    regular.productions.push(new Production(regular.nonTerminal[ this.states.indexOf(transition.from) ], transition.symbol))
+                    regular.productions.push(new Production(regular.nonTerminal[ this.states.indexOf(transition.from) ],
+                     transition.symbol +' '+ regular.nonTerminal[ this.states.indexOf(transition.to) ]))
+                    regular.productions.push(new Production(regular.nonTerminal[ this.states.indexOf(transition.from) ],
+                     transition.symbol))
                 } else {
-                    regular.productions.push(new Production(regular.nonTerminal[ this.states.indexOf(transition.from) ], transition.symbol +' '+ regular.nonTerminal[ this.states.indexOf(transition.to) ]))
+                    regular.productions.push(new Production(regular.nonTerminal[ this.states.indexOf(transition.from) ],
+                     transition.symbol +' '+ regular.nonTerminal[ this.states.indexOf(transition.to) ]))
                 }
         })
         regular.nonTerminal.forEach(nTerminal => {

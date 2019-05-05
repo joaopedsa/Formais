@@ -37,6 +37,8 @@
     font-size: 1em;
     font-weight: 500;
     cursor:pointer;
+    position: absolute;
+    bottom: -50px;
 }
 .emDesenvolvimento:hover{
     opacity: 0.9;

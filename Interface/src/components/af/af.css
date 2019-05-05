@@ -1,45 +1,47 @@
 .container-buttons-menu-af{
     display:flex;
     width:100%;
+    flex-wrap: wrap;
 }
 
 
 .container-buttons-menu-af button {
     display:flex;
-    flex-grow: 1;
     justify-content: center;
     border:1px black solid;
     border-right: 1px black solid;
     background-color: white;
     cursor: pointer;
+    width:25%;
+    flex-grow: 1;
+    padding: 5px;
 }
 .container-buttons-menu-af div {
     display:flex;
-    flex-grow: 1;
     justify-content: center;
     border:1px black solid;
     border-right: 1px black solid;
     background-color: white;
     cursor: pointer;
+    width:25%;
 }
 
 .container-buttons-menu-af div label{
     display:flex;
-    flex-grow: 1;
     justify-content: center;
     border: none;
     background-color: white;
-    cursor: pointer;
+    padding: 5px;
+    width: 100%;
 }
 
 .container-buttons-menu-af * {
-    font-size: 1em;
+    font-size: 1.2em;
 }
 
 .container-buttons-menu-af *:hover {
     background: whitesmoke;
 }
-
 
 .table{
     border: 1px solid black;

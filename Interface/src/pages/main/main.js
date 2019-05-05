@@ -5,6 +5,11 @@ import Swal from 'sweetalert2';
 import GR from '../../components/gr/gr';
 import AF from '../../components/af/af';
 import ER from '../../components/er/er';
+import Automato from '../../models/automato';
+import Regular from '../../models/regular';
+import Transition from '../../models/transition';
+import Expression from '../../models/expression'
+import Production from '../../models/production';
 
 export default class main extends Component {
     constructor(props) {
@@ -12,9 +17,17 @@ export default class main extends Component {
         this.state = {
             af: true,
             gr: false,
-            er: false
+            er: false,
+            automato: new Automato([],[],[],'',[]),
+            regular: new Regular([],[],[],'S'),
+            expression: new Expression()
         }
     }
+
+    handleTransformAutomatoToRegular = () => {
+        this.setState({regular :this.state.automato.transformToGramatica(),af:false,gr:true})
+    }
+
     handlePlostTwist= () => {
         Swal.fire({
           title: 'Em Desenvolvimento',
@@ -27,17 +40,110 @@ export default class main extends Component {
             center left
             no-repeat
           `,})
-      }
+    }
     handleChangeState = (e) => {
         if(parseInt(e.target.value) === 1) this.setState({af : true, gr: false, ef: false})
         if(parseInt(e.target.value) === 2) this.setState({af : false, gr: true, ef: false})
         if(parseInt(e.target.value) === 3) this.setState({af : false, gr: false, ef: true})
     }
+    handleDeterminize = () => {
+        this.setState({automato:this.state.automato.determinize()})
+      }
+    
+    filterTransitions = (state,symbol) => {
+        const newState = this.state.automato.transitions.filter(transition => transition.state === state && transition.symbol === symbol)
+        return newState
+    }
+
+    handleCreateTable = async () => {
+    let {value : size } = await Swal.fire({
+        title: 'Insira os Estados e Entradas',
+        html:
+        `
+        <div style="display: flex;flex-direction: row; justify-content: space-around">
+            <input id="swal-input1" max="20" min="1" type="number" placeholder="Estados" class="swal2-input"> 
+            <input id="swal-input2" max="20" min="1" type="number" placeholder="Entradas" class="swal2-input">
+        <div>
+        `,
+        focusConfirm: false,
+        preConfirm: () => {
+        return [
+            document.getElementById('swal-input1').value,
+            document.getElementById('swal-input2').value
+        ]
+        },
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Insira valores corretor!'
+            }
+        }
+    })
+    if(size)
+        this.createTable(size[0],size[1])
+    }
+
+    createTable = (numStates,numInputs) => {
+        let transitions = []
+        let alphabet = []
+        let states = []
+        for(let i = 0 ; i < numStates; ++i) {
+            for(let j = 0; j < numInputs; ++j) {
+                transitions = [...transitions, new Transition('q'+ i,'',j.toString())]
+                if(alphabet.indexOf(j.toString()) === -1)
+                    alphabet.push(j.toString())
+                if(states.indexOf('q' + i) === -1)
+                    states.push('q' + i)
+            }
+        }
+    let newAutomato = new Automato(states,alphabet,transitions,states[0],[])
+        this.setState({automato: newAutomato})
+    }
+
+    handleChangeCell = (e,symbol,state) => {
+        this.setState({automato: this.state.automato.setTransition(state,symbol,e.target.value)})
+    }
+    
+    handleFinalState = (e) => {
+        this.setState({automato: this.state.automato.setFinalState(e.target.getAttribute('value'))})
+    }
+
+    readSingleFile = (e) => {
+        let newAutomato = {}
+        const file = e.target.files[0];
+        if (!file) {
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const contents = JSON.parse(e.target.result)
+            newAutomato = new Automato(contents.states,contents.alphabet,contents.transitions,contents.initial,contents.finals)
+            this.setState({automato: newAutomato})
+        }
+        reader.readAsText(file)
+    }
+
+    handleChangeSymbol = async (e) => {
+        const symbol = e.target.value
+        let {value: input} = await Swal.fire({
+            title: 'insira a nova Entrada',
+            input: 'text',
+            showCancelButton: true,
+            inputValidator: (value) => {
+            if (!value || (this.state.automato.alphabet.indexOf(value) !== -1) ) {
+                return 'Insira um valor para entrada ou valor que seja diferente'
+            }
+            }
+        })
+        if (input) {
+            let newAutomato = this.state.automato.setSymbol(symbol,input)
+            this.setState({automato: newAutomato})
+        }
+    }
     render() {
         let state = ''
-        if(this.state.af) state = <AF/>
-        if(this.state.gr) state = <GR/>
-        if(this.state.er) state = <ER/>
+        if(this.state.af) state = <AF main={this} automato={this.state.automato}/>
+        if(this.state.gr) state = <GR main={this} regular={this.state.regular}/>
+        if(this.state.er) state = <ER main={this} expressao={this.state.expression}/>
         return (
             <div>
                 <div className="container-buttons-menu">
