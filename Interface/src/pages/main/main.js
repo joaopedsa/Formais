@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './main.css';
+import Swal from 'sweetalert2';
 
 import GR from '../../components/gr/gr';
 import AF from '../../components/af/af';
@@ -15,10 +16,24 @@ export default class main extends Component {
         }
     }
 
+    handlePlostTwist= () => {
+        Swal.fire({
+          title: 'Em Desenvolvimento',
+          width: 600,
+          padding: '3em',
+          background:' rgba(0,0,123,0.05)',
+          backdrop: `
+            rgba(0,0,123,0.4)
+            url("https://thumbs.gfycat.com/ScaryMassiveGallowaycow-max-1mb.gif")
+            center left
+            no-repeat
+          `,})
+      }
+
     handleChangeState = (e) => {
-        if(e.target.value == 1) this.setState({af : true, gr: false, ef: false})
-        if(e.target.value == 2) this.setState({af : false, gr: true, ef: false})
-        if(e.target.value == 3) this.setState({af : false, gr: false, ef: true})
+        if(parseInt(e.target.value) === 1) this.setState({af : true, gr: false, ef: false})
+        if(parseInt(e.target.value) === 2) this.setState({af : false, gr: true, ef: false})
+        if(parseInt(e.target.value) === 3) this.setState({af : false, gr: false, ef: true})
     }
 
 
@@ -30,6 +45,7 @@ export default class main extends Component {
         if(this.state.er) state = <ER/>
 
         return (
+            
             <div>
                 <div className="container-buttons-menu">
                     <button onClick={this.handleChangeState} value={1}>AUTOMATO FINITO</button>
@@ -37,6 +53,9 @@ export default class main extends Component {
                     <button onClick={this.handleChangeState} value={3}>EXPRESSAO REGULAR</button>
                 </div>
                 {state}
+                <div className="container-desenvolvimento">
+                    <button className="emDesenvolvimento" onClick={this.handlePlostTwist}>Não Clicar</button>
+                </div>
             </div>
         )
     }

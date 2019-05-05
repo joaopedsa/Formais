@@ -4,7 +4,6 @@ import Automato from '../../models/automato'
 import Transition from '../../models/transition'
 import Swal from 'sweetalert2'
 
-
 export default class af extends Component {
   constructor(props) {
     super(props)
@@ -129,7 +128,7 @@ export default class af extends Component {
           <button onClick={this.handleDeterminize}>Determinize</button>
           <button onClick={this.handleCreateTable}>Criar Tabela de Transição</button>
           <div>
-            <label htmlFor='selecao-arquivo'>Selecionar um arquivo</label>
+            <label htmlFor='selecao-arquivo'>Importar</label>
             <input id='selecao-arquivo' type="file" onChange={this.readSingleFile}/>
           </div>
           <button onClick={this.writeSingleFile}>Exportar</button>

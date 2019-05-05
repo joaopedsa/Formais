@@ -1,6 +1,46 @@
 .container-buttons-menu-af{
     display:flex;
+    width:100%;
 }
+
+
+.container-buttons-menu-af button {
+    display:flex;
+    flex-grow: 1;
+    justify-content: center;
+    border:1px black solid;
+    border-right: 1px black solid;
+    background-color: white;
+    cursor: pointer;
+}
+.container-buttons-menu-af div {
+    display:flex;
+    flex-grow: 1;
+    justify-content: center;
+    border:1px black solid;
+    border-right: 1px black solid;
+    background-color: white;
+    cursor: pointer;
+}
+
+.container-buttons-menu-af div label{
+    display:flex;
+    flex-grow: 1;
+    justify-content: center;
+    border: none;
+    background-color: white;
+    cursor: pointer;
+}
+
+.container-buttons-menu-af * {
+    font-size: 1em;
+}
+
+.container-buttons-menu-af *:hover {
+    background: whitesmoke;
+}
+
+
 .table{
     border: 1px solid black;
 }
@@ -9,7 +49,7 @@
 }
 .cellTable {
     border: 1px solid black;
-    width: 60px;
+    width: 75px;
     height: 25px;
     text-align: center;
     cursor: pointer;
