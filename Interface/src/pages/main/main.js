@@ -15,7 +15,6 @@ export default class main extends Component {
             er: false
         }
     }
-
     handlePlostTwist= () => {
         Swal.fire({
           title: 'Em Desenvolvimento',
@@ -29,23 +28,17 @@ export default class main extends Component {
             no-repeat
           `,})
       }
-
     handleChangeState = (e) => {
         if(parseInt(e.target.value) === 1) this.setState({af : true, gr: false, ef: false})
         if(parseInt(e.target.value) === 2) this.setState({af : false, gr: true, ef: false})
         if(parseInt(e.target.value) === 3) this.setState({af : false, gr: false, ef: true})
     }
-
-
     render() {
-
         let state = ''
         if(this.state.af) state = <AF/>
         if(this.state.gr) state = <GR/>
         if(this.state.er) state = <ER/>
-
         return (
-            
             <div>
                 <div className="container-buttons-menu">
                     <button onClick={this.handleChangeState} value={1}>AUTOMATO FINITO</button>

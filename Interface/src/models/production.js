@@ -1,4 +1,4 @@
-module.exports =  class Production {
+export default class Production {
 
     constructor(from, to) {
         this.from = from

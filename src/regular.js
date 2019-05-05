@@ -1,10 +1,9 @@
-
 module.exports =  class Regular {
 
-    contructor(nonTerminal, terminal, production, initial) {
+    constructor(nonTerminal, terminal, productions, initial) {
         this.nonTerminal = nonTerminal
         this.terminal = terminal
-        this.production = production
+        this.productions = productions
         this.initial = initial
     }
 }

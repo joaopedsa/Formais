@@ -1,4 +1,5 @@
-import Transition from './transition';
+import Transition from './transition'
+import Production from './production'
 
 export default class Automato {
     
@@ -11,9 +12,38 @@ export default class Automato {
     }
 
     transformToGramatica() {
-        if(!this.isDeterministic())
-            determinize()
-        
+        let regular = new Regular(['S'],this.alphabet,[],'S')
+        if(!this.isDeterministic()) {
+            let newAutomato = this.determinize()
+            this.states = newAutomato.states
+            this.transitions = newAutomato.transitions
+            this.finals = newAutomato.finals
+        }
+        const newStates = this.states.filter(state => {
+            return state !== this.initial
+        })
+        newStates.forEach((state,index) => {
+            regular.nonTerminal.push(String.fromCharCode('a'.charCodeAt(0)+index).toUpperCase())
+        })
+        this.transitions.forEach(transition => {
+            if(transition.to)
+                if(this.finals.indexOf(transition.to) !== -1) {
+                    regular.productions.push(new Production(regular.nonTerminal[ this.states.indexOf(transition.from) ], transition.symbol +' '+ regular.nonTerminal[ this.states.indexOf(transition.to) ]))
+                    regular.productions.push(new Production(regular.nonTerminal[ this.states.indexOf(transition.from) ], transition.symbol))
+                } else {
+                    regular.productions.push(new Production(regular.nonTerminal[ this.states.indexOf(transition.from) ], transition.symbol +' '+ regular.nonTerminal[ this.states.indexOf(transition.to) ]))
+                }
+        })
+        regular.nonTerminal.forEach(nTerminal => {
+            let exist = false
+            regular.productions.forEach(production => {
+                if(production.from === nTerminal)
+                    exist = true
+            })
+            if(!exist) regular.productions.push(new Production(nTerminal,''))
+        })
+        console.log(regular.productions)
+        return regular
     }
 
     determinize() {
