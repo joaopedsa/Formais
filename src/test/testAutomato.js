@@ -43,6 +43,6 @@ function testSemEpsilon() {
     const start = 'q0'
     const final = [ 'q2' ]
     automato = new Automato(states, alphabet, transitions, start, final)
-    automato.determinize()
+    automato.transformToGramatica()
 } 
 testSemEpsilon()

@@ -1,3 +1,4 @@
+
 module.exports =  class Regular {
 
     contructor(nonTerminal, terminal, production, initial) {

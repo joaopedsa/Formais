@@ -6,4 +6,6 @@ module.exports =  class Regular {
         this.production = production
         this.initial = initial
     }
+
+    
 }

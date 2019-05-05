@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 export default class gr extends Component {
   render() {
     return (
-        <div>GR</div>
+        <div></div>
     )
   }
 }

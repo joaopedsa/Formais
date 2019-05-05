@@ -10,6 +10,12 @@ export default class Automato {
         this.finals = finals
     }
 
+    transformToGramatica() {
+        if(!this.isDeterministic())
+            determinize()
+        
+    }
+
     determinize() {
         const fecho = this.fechoTransitivo()
         // Verifica se o automato é deterministico

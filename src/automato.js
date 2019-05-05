@@ -1,4 +1,6 @@
-const Transition = require('./transition');
+const Transition = require('./transition')
+const Production = require('./production')
+const Regular = require('./regular')
 
 module.exports = class Automato {
     
@@ -9,6 +11,27 @@ module.exports = class Automato {
         this.initial = initial
         this.finals = finals
     }
+
+    transformToGramatica() {
+        if(!this.isDeterministic())
+            this.determinize()
+        let regular = new Regular(['S'],[],[],'S')
+        const newStates = this.states.filter(state => {
+            return state !== this.initial
+        })
+        newStates.forEach((state,index) => {
+            regular.nonTerminal.push(String.fromCharCode('a'.charCodeAt(0)+index).toUpperCase())
+        })
+        this.alphabet.forEach(symbol => {
+            regular.terminal.push(symbol)
+        })
+        this.transitions.forEach(transition => {
+            /*Olhar Discord*/
+            console.log(transition)
+        })
+        console.log(String.fromCharCode('a'.charCodeAt(0)+1))
+    }
+
     determinize() {
         const fecho = this.fechoTransitivo()
         // Verifica se o automato é deterministico
@@ -130,9 +153,48 @@ module.exports = class Automato {
         return newState
     }
 
-    getTransition(from,symbol) {
+    getTransition(from, symbol) {
         let transition = []
-        transition = this.transitions.filter(transition => transition.from === from && transition.symbol === symbol)
+        transition = this.transitions.filter(transition => transition.from === from && transition.symbol == symbol)
         return transition[0].to
+    }
+    setTransition(from, symbol, to) {
+        let transitions = []
+        let newAutomato = new Automato(this.states,this.alphabet,[],this.initial,this.finals)
+        transitions = this.transitions.map(transition => {
+            if(transition.from !== from || transition.symbol != symbol){
+                return transition
+            }
+            else {
+                transition.to = to
+                return transition
+            }
+        })
+        newAutomato.transitions = transitions
+        return newAutomato
+    }
+    setFinalState(state) {
+        let newAutomato = new Automato(this.states,this.alphabet,this.transitions,this.initial,[])
+        if(this.finals.indexOf(state) === -1) this.finals.push(state)
+        else this.finals = this.finals.filter(final => final !== state)
+        newAutomato.finals = this.finals
+        return newAutomato;
+    }
+    setSymbol(lastSymbol, newSymbol) {
+        let transitions = []
+        let alphabet = []
+        transitions = this.transitions.map(transition => {
+            if(transition.symbol == lastSymbol) {
+                return new Transition(transition.from,transition.to,newSymbol)
+            }
+            return transition
+        })
+        alphabet = this.alphabet.map(symbol => {
+            if(symbol == lastSymbol) {
+                return newSymbol
+            } 
+            return symbol
+        })
+        return new Automato(this.states,alphabet,transitions,this.initial,this.finals)
     }
 }
