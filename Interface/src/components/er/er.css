@@ -1,0 +1,18 @@
+.container-inputs {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+    width: 100%;
+}
+.container-inputs input {
+    max-width: 400px;
+    min-width: 300px;
+}
+.container-inputs p {
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 2em;
+}

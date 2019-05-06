@@ -1,6 +1,6 @@
 export default class Expression {
     
-    contructor(expression) {
+    constructor(expression) {
         this.expression = expression
     }
     

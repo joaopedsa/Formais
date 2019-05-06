@@ -41,9 +41,9 @@ export default class main extends Component {
           `,})
     }
     handleChangeState = (e) => {
-        if(parseInt(e.target.value) === 1) this.setState({af : true, gr: false, ef: false})
-        if(parseInt(e.target.value) === 2) this.setState({af : false, gr: true, ef: false})
-        if(parseInt(e.target.value) === 3) this.setState({af : false, gr: false, ef: true})
+        if(parseInt(e.target.value) === 1) this.setState({af : true, gr: false, er: false})
+        if(parseInt(e.target.value) === 2) this.setState({af : false, gr: true, er: false})
+        if(parseInt(e.target.value) === 3) this.setState({af : false, gr: false, er: true})
     }
     handleDeterminize = () => {
         this.setState({automato:this.state.automato.determinize()})
