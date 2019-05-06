@@ -106,7 +106,7 @@ export default class main extends Component {
         this.setState({automato: this.state.automato.setFinalState(e.target.getAttribute('value'))})
     }
 
-    readSingleFile = (e) => {
+    readSingleFileAutomato = (e) => {
         let newAutomato = {}
         const file = e.target.files[0];
         if (!file) {
@@ -115,8 +115,27 @@ export default class main extends Component {
         const reader = new FileReader();
         reader.onload = (e) => {
             const contents = JSON.parse(e.target.result)
-            newAutomato = new Automato(contents.states,contents.alphabet,contents.transitions,contents.initial,contents.finals)
-            this.setState({automato: newAutomato})
+            if(contents.states) {
+                newAutomato = new Automato(contents.states,contents.alphabet,contents.transitions,contents.initial,contents.finals)
+                this.setState({automato: newAutomato})
+            }
+        }
+        reader.readAsText(file)
+    }
+
+    readSingleFileRegular = (e) => {
+        let newRegular = {}
+        const file = e.target.files[0];
+        if (!file) {
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const contents = JSON.parse(e.target.result)
+            if(contents.nonTerminal) {
+                newRegular = new Regular(contents.nonTerminal,contents.terminal,contents.productions,contents.initial)
+                this.setState({regular: newRegular})
+            }
         }
         reader.readAsText(file)
     }

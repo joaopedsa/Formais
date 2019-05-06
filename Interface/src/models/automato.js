@@ -46,7 +46,6 @@ export default class Automato {
             })
             if(!exist) regular.productions.push(new Production(nTerminal,''))
         })
-        console.log(regular.productions)
         return regular
     }
 

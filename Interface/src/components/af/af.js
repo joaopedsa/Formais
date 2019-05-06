@@ -21,7 +21,7 @@ export default class af extends Component {
           <button onClick={this.props.main.handleCreateTable}>Criar Tabela de Transição</button>
           <div>
             <label htmlFor='selecao-arquivo'>Importar</label>
-            <input id='selecao-arquivo' type="file" onChange={this.props.main.readSingleFile}/>
+            <input id='selecao-arquivo' type="file" onChange={this.props.main.readSingleFileAutomato}/>
           </div>
           <button onClick={this.writeSingleFile}>Exportar</button>
           <button onClick={this.props.main.handleTransformAutomatoToRegular}>Tranformar para GR</button>
@@ -31,7 +31,7 @@ export default class af extends Component {
             <div className="headerTable">
               <div className="cellTable">*</div>
               {this.props.automato.alphabet.map((symbol,key) => (
-                <input className="cellTable" key={key} value={symbol} onClick={this.props.main.handleChangeSymbol}/>
+                <input className="cellTable" key={key} defaultValue={symbol} onClick={this.props.main.handleChangeSymbol}/>
               ))}
             </div>
             <div className="bodyTable">
