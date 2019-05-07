@@ -18,6 +18,7 @@ export default class gr extends Component {
     return (
         <div className="container-gr">
           <div className="container-buttons-menu-af">
+            <button onClick={this.props.main.handleCreateSentenças}>Criar Sentença</button>
             <button onClick={this.props.main.transformGramaticaToAutomato}>Transformar para Automato Finito</button>
             <button onClick={this.writeSingleFile}>Exportar</button>
             <div>
@@ -28,8 +29,9 @@ export default class gr extends Component {
           <div className="container-gramatica">
             <div>  
               {this.props.regular.getTotalProduction().map((sentenca,key) => (
-                <div key={key}>
-                  <input className="sentenca" defaultValue={sentenca} onChange={this.props.main.handleChangeSentenca}/>
+                <div key={key} className="sentenca-container">
+                  <span>{sentenca[0]} -> </span>
+                  <input className="sentenca" value={sentenca[1]} onChange={(e) => this.props.main.handleChangeSentenca(e,sentenca[0])}/>
                 </div>                
               ))}
             </div>

@@ -9,6 +9,7 @@ import Automato from '../../models/automato';
 import Regular from '../../models/regular';
 import Transition from '../../models/transition';
 import Expression from '../../models/expression'
+import Production from '../../models/production';
 
 export default class main extends Component {
     constructor(props) {
@@ -54,6 +55,32 @@ export default class main extends Component {
         return newState
     }
 
+    handleCreateSentenças = async () => {
+        let {value: size} = await Swal.fire({
+            title: 'insira número de sentenças',
+            input: 'number',
+            showCancelButton: true,
+            inputValidator: (value) => {
+            if (!value ) {
+                return 'Insira um valor para sentença'
+            }
+            }
+        })
+        if(size) {
+            this.createSentenças(size)
+        }
+    }
+
+    createSentenças = (size) => {
+        let regular = new Regular(['S'],[],[],'S')
+        regular.productions.push(new Production('S',''))
+        for(let i = 0 ; i < size-1 ; ++i) {
+            regular.nonTerminal.push(String.fromCharCode('a'.charCodeAt(0)+i).toUpperCase())
+            regular.productions.push(new Production(String.fromCharCode('a'.charCodeAt(0)+i).toUpperCase(),''))
+        }
+        this.setState({regular : regular})
+    }
+
     handleCreateTable = async () => {
     let {value : size } = await Swal.fire({
         title: 'Insira os Estados e Entradas',
@@ -73,7 +100,7 @@ export default class main extends Component {
         },
         inputValidator: (value) => {
             if (!value) {
-                return 'Insira valores corretor!'
+                return 'Insira valores corretamente!'
             }
         }
     })
@@ -162,6 +189,10 @@ export default class main extends Component {
         let temp = this.state.regular.transformRegularToAutomato()
         let newAutomato = new Automato(temp.states,temp.alphabet,temp.transitions,temp.initial,temp.finals)
         this.setState({automato:newAutomato,af:true,gr:false})
+    }
+
+    handleChangeSentenca = (e,from) => {
+        this.setState({regular : this.state.regular.setProductions(from,e.target.value)})
     }
 
     render() {
