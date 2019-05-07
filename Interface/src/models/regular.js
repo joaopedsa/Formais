@@ -42,8 +42,9 @@ export default class Regular {
         })
         let newTerminal = []
         newProductionOrdened.forEach(production => {
-            if(production.to && newTerminal.indexOf(production.to.match(/[a-z]/).join()) === -1)
-                newTerminal.push(production.to.match(/[a-z]/).join())
+            console.log(production.to.match(/[a-z0-9]?/).join())
+            if(production.to && production.to.match(/[a-z0-9]/) && newTerminal.indexOf(production.to.match(/[a-z0-9]/).join()) === -1)
+                newTerminal.push(production.to.match(/[a-z0-9]/).join())
         })
         return new Regular(this.nonTerminal,newTerminal,newProductionOrdened,this.initial)
     }
