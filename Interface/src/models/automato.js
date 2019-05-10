@@ -29,13 +29,10 @@ export default class Automato {
         this.transitions.forEach(transition => {
             if(transition.to)
                 if(this.finals.indexOf(transition.to) !== -1) {
-                    regular.productions.push(new Production(regular.nonTerminal[ this.states.indexOf(transition.from) ],
-                     transition.symbol +' '+ regular.nonTerminal[ this.states.indexOf(transition.to) ]))
-                    regular.productions.push(new Production(regular.nonTerminal[ this.states.indexOf(transition.from) ],
-                     transition.symbol))
+                    regular.productions.push(new Production(regular.nonTerminal[ this.states.indexOf(transition.from) ], transition.symbol +' '+ regular.nonTerminal[ this.states.indexOf(transition.to) ]))
+                    regular.productions.push(new Production(regular.nonTerminal[ this.states.indexOf(transition.from) ], transition.symbol))
                 } else {
-                    regular.productions.push(new Production(regular.nonTerminal[ this.states.indexOf(transition.from) ],
-                     transition.symbol +' '+ regular.nonTerminal[ this.states.indexOf(transition.to) ]))
+                    regular.productions.push(new Production(regular.nonTerminal[ this.states.indexOf(transition.from) ], transition.symbol +' '+ regular.nonTerminal[ this.states.indexOf(transition.to) ]))
                 }
         })
         regular.nonTerminal.forEach(nTerminal => {
@@ -136,16 +133,26 @@ export default class Automato {
             let newTransitions = this.transitions.filter(transition => transition.symbol === '&')
             newTransitions.forEach((transition, index) => {
                 if(transition.to.includes(transition.from)) {
-                    fecho = [...fecho, transition.to]
+                    let newTo = this.reach(transition.to,newTransitions)
+                    fecho = [...fecho, newTo]
                 } else {
                     let newTransition = transition.to.split(',')
                     newTransition.splice(index,0,transition.from)
-                    fecho = [...fecho,newTransition.join(',')]
+                    let newTo = this.reach(newTransition.join(','),newTransitions)
+                    fecho = [...fecho, newTo]
                 }
             })
         }
         fecho = this.organizaOrdemFecho(fecho)
         return fecho
+    }
+
+    reach(to, transitions) {
+        for(let i = 0; i < this.states.length; ++i) {
+            if(to && to.includes(this.states[i]))
+                to = to + ',' + transitions[i].to
+        }
+        return to;
     }
 
     organizaOrdemFecho(states) {

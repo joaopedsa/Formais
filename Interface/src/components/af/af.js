@@ -31,7 +31,7 @@ export default class af extends Component {
             <div className="headerTable">
               <div className="cellTable">*</div>
               {this.props.automato.alphabet.map((symbol,key) => (
-                <input className="cellTable" key={key} defaultValue={symbol} onClick={this.props.main.handleChangeSymbol}/>
+                <input className="cellTable" key={key} value={symbol} onClick={this.props.main.handleChangeSymbol}/>
               ))}
             </div>
             <div className="bodyTable">
