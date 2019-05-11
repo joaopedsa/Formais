@@ -1,8 +1,8 @@
-const Transition = require('./transition')
-const Production = require('./production')
-const Regular = require('./regular')
+import Transition from './transition'
+import Production from './production'
+import Regular from './regular'
 
-module.exports = class Automato {
+export default class Automato {
     
     constructor(states,alphabet,transitions,initial,finals) {
         this.states = states
@@ -133,16 +133,26 @@ module.exports = class Automato {
             let newTransitions = this.transitions.filter(transition => transition.symbol === '&')
             newTransitions.forEach((transition, index) => {
                 if(transition.to.includes(transition.from)) {
-                    fecho = [...fecho, transition.to]
+                    let newTo = this.reach(transition.to,newTransitions)
+                    fecho = [...fecho, newTo]
                 } else {
                     let newTransition = transition.to.split(',')
                     newTransition.splice(index,0,transition.from)
-                    fecho = [...fecho,newTransition.join(',')]
+                    let newTo = this.reach(newTransition.join(','),newTransitions)
+                    fecho = [...fecho, newTo]
                 }
             })
         }
         fecho = this.organizaOrdemFecho(fecho)
         return fecho
+    }
+
+    reach(to, transitions) {
+        for(let i = 0; i < this.states.length; ++i) {
+            if(to && to.includes(this.states[i]))
+                to = to + ',' + transitions[i].to
+        }
+        return to;
     }
 
     organizaOrdemFecho(states) {

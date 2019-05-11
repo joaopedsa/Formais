@@ -85,18 +85,20 @@ export default class Regular {
 
                     let newTransitions = newAutomato.transitions.filter(transition => transition.from === state)
 
-                    for (let i = 0; i < newTransitions.length-1 ; ++i) {
-                        for (let j = i + 1 ; j < newTransitions.length ; ++j) {
-                            if (newTransitions[i].symbol === newTransitions[j].symbol) {
-                                
-                                if (newTransitions[i].to) {
-                                    newTransitions[i].to = newTransitions[i].to + ',' + newAutomato.finals[0]
+                    for (let i = 0; i < newTransitions.length ; ++i) {
+                        for (let j = 0 ; j < newTransitions.length ; ++j) {
+                            if(i !== j) {
+                                if (newTransitions[i].symbol === newTransitions[j].symbol) {
+                                    
+                                    if (newTransitions[i].to) {
+                                        newTransitions[i].to = newTransitions[i].to + ',' + newAutomato.finals[0]
+                                    }
+                                    newAutomato.transitions = newAutomato.transitions.filter(transition => {
+                                        if(newTransitions[j].symbol === transition.symbol && transition.from === newTransitions[j].from && !transition.to) 
+                                            return false
+                                        return true
+                                    })
                                 }
-                                newAutomato.transitions = newAutomato.transitions.filter(transition => {
-                                    if(newTransitions[j].symbol === transition.symbol && transition.from === newTransitions[j].from && !transition.to) 
-                                        return false
-                                    return true
-                                })
                             }   
                         }
                     }

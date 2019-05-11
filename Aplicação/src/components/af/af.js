@@ -31,7 +31,7 @@ export default class af extends Component {
             <div className="headerTable">
               <div className="cellTable">*</div>
               {this.props.automato.alphabet.map((symbol,key) => (
-                <input className="cellTable" key={key} defaultValue={symbol} onClick={this.props.main.handleChangeSymbol}/>
+                <input className="cellTable" key={key} value={symbol} onClick={this.props.main.handleChangeSymbol}/>
               ))}
             </div>
             <div className="bodyTable">
@@ -54,18 +54,3 @@ export default class af extends Component {
     )
   }
 }
-
-/*
-Swal.fire({
-  title: 'Custom width, padding, background.',
-  width: 600,
-  padding: '3em',
-  background: '#fff url(/images/trees.png)',
-  backdrop: `
-    rgba(0,0,123,0.4)
-    url("/images/nyan-cat.gif")
-    center left
-    no-repeat
-  `
-})
-*/
