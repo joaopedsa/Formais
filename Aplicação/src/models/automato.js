@@ -179,14 +179,14 @@ export default class Automato {
 
     getTransition(from, symbol) {
         let transition = []
-        transition = this.transitions.filter(transition => transition.from === from && transition.symbol == symbol)
+        transition = this.transitions.filter(transition => transition.from === from && transition.symbol === symbol)
         return transition[0].to
     }
     setTransition(from, symbol, to) {
         let transitions = []
         let newAutomato = new Automato(this.states,this.alphabet,[],this.initial,this.finals)
         transitions = this.transitions.map(transition => {
-            if(transition.from !== from || transition.symbol != symbol){
+            if(transition.from !== from || transition.symbol !== symbol){
                 return transition
             }
             else {
@@ -208,13 +208,13 @@ export default class Automato {
         let transitions = []
         let alphabet = []
         transitions = this.transitions.map(transition => {
-            if(transition.symbol == lastSymbol) {
+            if(transition.symbol === lastSymbol) {
                 return new Transition(transition.from,transition.to,newSymbol)
             }
             return transition
         })
         alphabet = this.alphabet.map(symbol => {
-            if(symbol == lastSymbol) {
+            if(symbol === lastSymbol) {
                 return newSymbol
             } 
             return symbol
