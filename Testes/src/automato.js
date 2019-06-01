@@ -12,6 +12,22 @@ module.exports = class Automato {
         this.finals = finals
     }
 
+    minimizacao() {
+        let reachebleStates = [this.initial]
+        for(let i = 0 ; i < reachebleStates.length; i++) {
+            let transitionReach = this.transitions.filter(transition => reachebleStates[i] === transition.from)
+            
+        }
+    }
+
+    recheableStates() {
+
+    }
+
+    NonDeadStates() {
+
+    }
+
     transformToGramatica() {
         let regular = new Regular(['S'],this.alphabet,[],'S')
         if(!this.isDeterministic()) {
