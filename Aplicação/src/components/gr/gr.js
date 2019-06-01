@@ -74,10 +74,8 @@ class gr extends Component {
             <button onClick={this.handleCreateSentenças}>Criar Sentença</button>
             <button onClick={this.props.transformGraticaToAutomato}>Transformar para Automato Finito</button>
             <button onClick={this.writeSingleFile}>Exportar</button>
-            <div>
-              <label htmlFor='selecao-arquivo-regular'>Importar</label>
-              <input id='selecao-arquivo-regular' type="file" onChange={this.readSingleFileRegular}/>
-            </div>
+            <label htmlFor='selecao-arquivo-regular'>Importar</label>
+            <input id='selecao-arquivo-regular' type="file" onChange={this.readSingleFileRegular}/>
           </div>
           <div className="container-gramatica">
             <div>  

@@ -10,9 +10,16 @@ export const transformToGramatica = () => {
     }
 }
 
-export const newAutomato = (automato) => {
-    return {
-        type: 'NEW_AUTOMATO',
-        payload: automato
+export const newAutomato = (automato,type) => {
+    if (type === 2) {
+        return {
+            type: 'NEW_AUTOMATO_2',
+            payload: automato
+        }
+    } else { 
+        return {
+            type: 'NEW_AUTOMATO',
+            payload: automato
+        }
     }
 }

@@ -4,6 +4,7 @@ import Expression from '../models/expression'
 
 const initialState = {
     automato: new Automato([],[],[],'',[]),
+    automato2: new Automato([],[],[],'',[]),
     regular: new Regular([],[],[],'S'),
     expression: new Expression()
   }
@@ -12,6 +13,8 @@ export default (state = initialState, action) => {
 switch (action.type) {
     case 'NEW_AUTOMATO':
       return {...state, automato: action.payload}
+    case 'NEW_AUTOMATO_2':
+      return {...state, automato2: action.payload}
     case 'DETERMINIZE':
       return {...state, automato: state.automato.determinize()}
     case 'TRANSFORM_GRAMATICA':
