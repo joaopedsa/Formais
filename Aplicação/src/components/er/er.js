@@ -50,10 +50,8 @@ export default class er extends Component {
     return (
         <div>
         <div className="container-buttons-menu-af">
-          <div>
-            <label htmlFor='selecao-arquivo'>Importar</label>
-            <input id='selecao-arquivo' type="file" onChange={this.readSingleFileExpression}/>
-          </div>
+          <label htmlFor='selecao-arquivo'>Importar</label>
+          <input id='selecao-arquivo' type="file" onChange={this.readSingleFileExpression}/>
           <button onClick={this.writeSingleFile}>Exportar</button>
         </div>
           <div className="container-inputs">
