@@ -8,7 +8,7 @@ module.exports =  class LivreContexto {
         this.productions = productions
         this.initial = initial
     }
-    
+        
     getTotalProduction() {
         let sentenca = []
         this.nonTerminal.forEach((nTerminal,index) => {
@@ -25,11 +25,7 @@ module.exports =  class LivreContexto {
         let newProduction = this.productions.filter(production=> production.from !== from)
         let newTransitions = transitions.split('|')
         newTransitions.forEach(transitions => {
-            if(transitions.substring(1,2)) {
-                newProduction.push(new Production(from,transitions.substring(0,1) + ' ' + transitions.substring(1,2)))
-            } else {
-                newProduction.push(new Production(from,transitions.substring(0,1)))
-            }
+            newProduction.push(new Production(from,transitions))
         })
         let newProductionOrdened = []
 

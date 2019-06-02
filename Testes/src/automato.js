@@ -11,8 +11,32 @@ module.exports = class Automato {
         this.initial = initial
         this.finals = finals
     }
-
+    /*
+        Minimização com 3 passos
+        1 passo seria a verificação dos estados inalcançaveis e retirando-os
+        2 passo verificar os estados mortos e retirando-os
+        3 passo construir classe de equivalencia
+    */
     minimizacao() {
+        const nonDeadAndReachableStates = this.nonDeadStates(this.reachableStates())
+        this.transitions = this.transitions.filter(transition => nonDeadAndReachableStates.indexOf(transition.from) !== -1)
+        this.states = this.states.filter(state => nonDeadAndReachableStates.indexOf(state) !== -1)
+        this.finals = this.finals.filter(final => nonDeadAndReachableStates.indexOf(final) !== -1)
+        this.equivalenceClass()
+    }
+
+    /*Constroi estados por classe de equivalencia*/
+    equivalenceClass() {
+        //primeiro passo separar em duas classes de equivalencia de finais e de não finais
+        let classesEquivalencia = [this.states.filter(state => this.finals.indexOf(state) === -1)]
+        let classesEquivalenciaFinal = [this.finals]
+        console.log(classesEquivalencia)
+        console.log(classesEquivalenciaFinal)
+        
+    }
+
+    /*retorna os estados alcançaveis*/
+    reachableStates() {
         let reachebleStates = [this.initial]
         for(let i = 0 ; i < reachebleStates.length; i++) {
             let transitionsReach = this.transitions.filter(transition => reachebleStates[i] === transition.from)
@@ -21,50 +45,47 @@ module.exports = class Automato {
                     reachebleStates.push(transition.to)
             })
         }
-        console.log(reachebleStates)
-        let nonDeadStates = reachebleStates.filter(state => this.finals.indexOf(state) !== -1)
-        let possibleDeadStates = reachebleStates.filter(state => this.finals.indexOf(state) === -1) 
-        console.log(possibleDeadStates)
-        possibleDeadStates.forEach(state => {
-            let possibleDeadStatesTransitions = this.transitions.filter(transition => transition.from === state)
-            possibleDeadStatesTransitions.forEach(transition => {
-                for(let i = 0 ; i < possibleDeadStates.length ; i++) {
-                    if(nonDeadStates.indexOf(transition.to) !== -1 && nonDeadStates.indexOf(transition.from) === -1) {
-                        nonDeadStates.push(transition.from)
-                        break;
-                    } else {
-                        
-                    }
-                }
-            })            
-        })
-        console.log(nonDeadStates)
+        return reachebleStates
     }
 
-    recheableStates() {
-        let reachebleStates = [this.initial]
-        for(let i = 0 ; i < reachebleStates.length; i++) {
-            let transitionsReach = this.transitions.filter(transition => reachebleStates[i] === transition.from)
-            transitionsReach.forEach(transition => {
-                if(reachebleStates.indexOf(transition.to) === -1)
-                    reachebleStates.push(transition.to)
+    /*retorna os estados que não são mortos*/
+    nonDeadStates(reachebleStates) {
+        const nonDeadStates = reachebleStates.filter(state => this.finals.indexOf(state) !== -1)
+        const possibleDeadStates = reachebleStates.filter(state => this.finals.indexOf(state) === -1)
+        for(let i = 0 ; i < possibleDeadStates.length ; ++i) {
+            const transitions = this.transitions.filter(transition => transition.from === possibleDeadStates[i])
+            let nonDead = false;
+            transitions.forEach(transition => {
+                if(nonDeadStates.indexOf(transition.to) !== -1 && nonDeadStates.indexOf(possibleDeadStates[i]) === -1)
+                    nonDead = true
             })
-        }
-    }
-
-    NonDeadStates() {
-        for(let i = 0 ; i < possibleDeadStates.length ; i++) {
-            if(nonDeadStates.indexOf(transition.to) !== -1 && nonDeadStates.indexOf(transition.from) === -1) {
-                nonDeadStates.push(transition.from)
-                break;
+            if(nonDead) {
+                nonDeadStates.push(possibleDeadStates[i])
             } else {
-                
+                transitions.forEach(transition => {
+                    let states = this.checkDeadState(possibleDeadStates[i],nonDeadStates,transition.to,0)
+                    if(states)
+                        nonDeadStates = states
+                })
             }
         }
+        return nonDeadStates
     }
-    /*Verifica se o suposto estado é um estado morto*/
-    checkDeadState() {
 
+    /*Verifica se o suposto estado é um estado morto com recursão caso falhe na primeira tentativa*/
+    checkDeadState(possibleState,nonDeadStates,state,index) {
+        if(index < this.states.length)  { 
+            const transitions = this.transitions.filter(transition => transition.from === state)
+            transitions.forEach(transition => {
+                if(nonDeadStates.indexOf(transition.to) !== -1 && nonDeadStates.indexOf(possibleState) === -1) {
+                    return nonDeadStates.push(possibleState)
+                } else {
+                    index++
+                    this.checkDeadState(possibleState,nonDeadStates,transition.to,index)
+                }
+            })
+        } 
+        return
     }
 
     transformToGramatica() {
