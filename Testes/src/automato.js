@@ -15,16 +15,55 @@ module.exports = class Automato {
     minimizacao() {
         let reachebleStates = [this.initial]
         for(let i = 0 ; i < reachebleStates.length; i++) {
-            let transitionReach = this.transitions.filter(transition => reachebleStates[i] === transition.from)
-            
+            let transitionsReach = this.transitions.filter(transition => reachebleStates[i] === transition.from)
+            transitionsReach.forEach(transition => {
+                if(reachebleStates.indexOf(transition.to) === -1)
+                    reachebleStates.push(transition.to)
+            })
         }
+        console.log(reachebleStates)
+        let nonDeadStates = reachebleStates.filter(state => this.finals.indexOf(state) !== -1)
+        let possibleDeadStates = reachebleStates.filter(state => this.finals.indexOf(state) === -1) 
+        console.log(possibleDeadStates)
+        possibleDeadStates.forEach(state => {
+            let possibleDeadStatesTransitions = this.transitions.filter(transition => transition.from === state)
+            possibleDeadStatesTransitions.forEach(transition => {
+                for(let i = 0 ; i < possibleDeadStates.length ; i++) {
+                    if(nonDeadStates.indexOf(transition.to) !== -1 && nonDeadStates.indexOf(transition.from) === -1) {
+                        nonDeadStates.push(transition.from)
+                        break;
+                    } else {
+                        
+                    }
+                }
+            })            
+        })
+        console.log(nonDeadStates)
     }
 
     recheableStates() {
-
+        let reachebleStates = [this.initial]
+        for(let i = 0 ; i < reachebleStates.length; i++) {
+            let transitionsReach = this.transitions.filter(transition => reachebleStates[i] === transition.from)
+            transitionsReach.forEach(transition => {
+                if(reachebleStates.indexOf(transition.to) === -1)
+                    reachebleStates.push(transition.to)
+            })
+        }
     }
 
     NonDeadStates() {
+        for(let i = 0 ; i < possibleDeadStates.length ; i++) {
+            if(nonDeadStates.indexOf(transition.to) !== -1 && nonDeadStates.indexOf(transition.from) === -1) {
+                nonDeadStates.push(transition.from)
+                break;
+            } else {
+                
+            }
+        }
+    }
+    /*Verifica se o suposto estado é um estado morto*/
+    checkDeadState() {
 
     }
 

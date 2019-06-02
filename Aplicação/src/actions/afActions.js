@@ -6,7 +6,7 @@ export const determinize = () => {
 
 export const transformToGramatica = () => {
     return {
-        type: 'TRANSFORM_GRAMATICA'
+        type: 'TRANSFORM_GRAMATICA_REGULAR'
     }
 }
 

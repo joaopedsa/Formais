@@ -36,6 +36,6 @@ function testMinimizacao () {
     const start = 'q0'
     const final = ['q0','q3','q6']
     automato = new Automato(states, alphabet, transitions, start, final)
-    console.log(automato.determinize())
+    automato.minimizacao()
 }
 testMinimizacao()

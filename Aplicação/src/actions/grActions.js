@@ -7,7 +7,7 @@ export const transformGraticaToAutomato = () => {
 
 export const newGramatica = (gramatica) => {
     return {
-        type: 'NEW_GRAMATICA',
+        type: 'NEW_GRAMATICA_REGULAR',
         payload: gramatica
     }
 }

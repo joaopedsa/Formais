@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
-import './main.css';
+import React, { Component } from 'react'
+import './main.css'
 import { changeType } from '../../actions/pageActions'
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'
 
 
-import GR from '../../components/gr/gr';
-import AF from '../../components/af/af';
-import ER from '../../components/er/er';
+import GR from '../../components/gr/gr'
+import AF from '../../components/af/af'
+import ER from '../../components/er/er'
+import GL from '../../components/gl/gl'
 import { connect } from 'react-redux'
 
 
@@ -31,12 +32,14 @@ class main extends Component {
         if(this.props.af) state = <AF/>
         if(this.props.gr) state = <GR/>
         if(this.props.er) state = <ER/>
+        if(this.props.gl) state = <GL/>
         return (
             <div>
                 <div className="container-buttons-menu">
                     <button onClick={e => this.props.changeType(e.target.value)} value={1}>AUTOMATO FINITO</button>
                     <button onClick={e => this.props.changeType(e.target.value)} value={2}>GRAMATICA REGULAR</button>
                     <button onClick={e => this.props.changeType(e.target.value)} value={3}>EXPRESSAO REGULAR</button>
+                    <button onClick={e => this.props.changeType(e.target.value)} value={4}>GRAMATICA LIVRE</button>
                 </div>
                 {state}
                 <div className="container-desenvolvimento">
@@ -52,6 +55,7 @@ const mapStateToProps = (state) => {
         af: state.pageProps.af,
         gr: state.pageProps.gr,
         er: state.pageProps.er,
+        gl: state.pageProps.gl
     }
 }
 

@@ -42,7 +42,6 @@ export default class Regular {
         })
         let newTerminal = []
         newProductionOrdened.forEach(production => {
-            console.log(production.to.match(/[a-z0-9]?/).join())
             if(production.to && production.to.match(/[a-z0-9]/) && newTerminal.indexOf(production.to.match(/[a-z0-9]/).join()) === -1)
                 newTerminal.push(production.to.match(/[a-z0-9]/).join())
         })
