@@ -28,11 +28,22 @@ module.exports = class Automato {
     /*Constroi estados por classe de equivalencia*/
     equivalenceClass() {
         //primeiro passo separar em duas classes de equivalencia de finais e de não finais
-        let classesEquivalencia = [this.states.filter(state => this.finals.indexOf(state) === -1)]
-        let classesEquivalenciaFinal = [this.finals]
+        let classesEquivalencia = [this.states.filter(state => this.finals.indexOf(state) === -1),this.finals]
+        this.alphabet.forEach(symbol => {
+            for(let i = 0 ; i < classesEquivalencia.length; ++i) {
+                let classe = classesEquivalencia[i]
+                classe.forEach(state => {
+                    //transição para qual o estado da classe de equivalencia vai
+                    let [transition] = this.transitions.filter(transition => 
+                        (transition.from === state && transition.symbol === symbol))
+                    if(classe.indexOf(transition.to) === -1) {
+                        classe = classe.filter(stateCompare => stateCompare !== state)
+                        console.log(classe)
+                    }
+                })
+            }
+        })
         console.log(classesEquivalencia)
-        console.log(classesEquivalenciaFinal)
-        
     }
 
     /*retorna os estados alcançaveis*/
