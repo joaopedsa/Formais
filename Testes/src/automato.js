@@ -11,6 +11,8 @@ module.exports = class Automato {
         this.initial = initial
         this.finals = finals
     }
+
+
     /*
         Minimização com 3 passos
         1 passo seria a verificação dos estados inalcançaveis e retirando-os

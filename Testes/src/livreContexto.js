@@ -8,6 +8,49 @@ module.exports =  class LivreContexto {
         this.productions = productions
         this.initial = initial
     }
+
+    fatoracao() {
+        this.terminal.forEach(symbol => {
+            this.nonTerminal.forEach(nonTerminalTemp => {
+                const productionsNonTerminal = this.productions.filter(production => production.from === nonTerminalTemp)
+                let productionsSymbol = productionsNonTerminal.filter(production => production.to.includes(symbol))
+                if(productionsSymbol.length > 1) {
+                    const newProductions = this.productions.filter(production => {
+                        for(let i = 0 ; i < productionsSymbol.length; ++i) {
+                            if(productionsSymbol[i].from === production.from && productionsSymbol[i].to === production.to)
+                                return false
+                        }
+                        return true
+                    })
+                    const newFrom = productionsSymbol[0].from + '`'
+                    let tempProductions = []
+                    for(let i = 0; i < productionsSymbol.length ;++i) {
+                        if(tempProductions.filter(production => production.to === symbol + ' ' + nonTerminalTemp).length === 0)
+                            tempProductions.push(new Production(newFrom, symbol + ' ' + nonTerminalTemp))
+                    }
+                    let newProductions2 = this.productions.filter(production => {
+                        for(let i = 0 ; i < productionsSymbol.length; ++i) {
+                            if(productionsSymbol[i].from === production.from && productionsSymbol[i].to === production.to)
+                                return true
+                        }
+                        return false
+                    })
+                    newProductions2 = newProductions2.map(production => {
+                        let newTo = production.to.split(' ')
+                        newTo = newTo.filter(to => this.nonTerminal.indexOf(to) !== -1)
+                        return new Production(production.from, symbol + ' ' + newFrom)
+                    })
+                    let newProductions3 = productionsSymbol.map(production => {
+                        return new Production(newFrom,production.to.replace(symbol + ' ',''))
+                    })
+                    newProductions2.forEach(production => newProductions.push(production))
+                    newProductions3.forEach(production => newProductions.push(production))
+                    this.productions = newProductions
+                }
+            })
+        })
+        console.log(this.productions)
+    }
         
     getTotalProduction() {
         let sentenca = []
