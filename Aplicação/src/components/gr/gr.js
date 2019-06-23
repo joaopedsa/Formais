@@ -71,7 +71,7 @@ class gr extends Component {
     return (
         <div className="container-gr">
           <div className="container-buttons-menu-af">
-            <button onClick={this.handleCreateSentenças}>Criar Sentença</button>
+            <button onClick={this.handleCreateSentenças}>Criar Produções</button>
             <button onClick={this.props.transformGraticaToAutomato}>Transformar para Automato Finito</button>
             <button onClick={this.writeSingleFile}>Exportar</button>
             <label htmlFor='selecao-arquivo-regular'>Importar</label>

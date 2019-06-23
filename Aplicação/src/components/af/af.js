@@ -133,6 +133,13 @@ class af extends Component {
     this.props.newAutomato(this.props.automato2.setFinalState(e.target.getAttribute('value')),type)
   }
 
+  handleUniao = () => {
+    if(this.props.automato && this.props.automato2) {
+      this.props.newAutomato(this.props.automato.uniaoAutomato(this.props.automato2))
+      this.props.newAutomato(new Automato([],[],[],'',[]),2)
+    }
+  }
+
 
   render() {
     return (
@@ -142,7 +149,7 @@ class af extends Component {
           <button onClick={this.handleCreateTable}>Criar Tabela de Transição</button>
           <button onClick={() => this.handleCreateTable(2)}>Criar Tabela de Transição 2</button>
           <button onClick={this.handleCreateTable}>Minimização</button>
-          <button onClick={this.handleCreateTable}>União</button>
+          <button onClick={this.handleUniao}>União</button>
           <button onClick={this.handleCreateTable}>Intersecção</button>
           <label htmlFor='selecao-arquivo'>Importar</label>
           <input id='selecao-arquivo' type="file" onChange={this.readSingleFileAutomato}/>

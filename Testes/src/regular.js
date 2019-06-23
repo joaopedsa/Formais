@@ -114,7 +114,7 @@ module.exports =  class Regular {
                     newAutomato.transitions.push(new Transition(state,'',symbol))
             })  
         })
-        newAutomato.transitions = newAutomato.transitions.filter(transition => transition.symbol)
+        newAutomato.transitions = newAutomato.transitions.filter(transition => transition.symbol)        
         return newAutomato
     }
 }

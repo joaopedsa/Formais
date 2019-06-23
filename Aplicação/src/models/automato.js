@@ -12,6 +12,187 @@ export default class Automato {
         this.finals = finals
     }
 
+    uniaoAutomato(automato2) {
+        let A1 = this.transformToGramatica()
+        let A2 = automato2.transformToGramatica()
+        A1.nonTerminal = A1.nonTerminal.map(nTerminal => {
+            return nTerminal + "1"
+        })
+        A1.productions.map(production => {
+            production.from = production.from + '1'
+            let productionArray = production.to.split(' ') 
+            if(productionArray.length === 2)
+                production.to = productionArray[0] + ' ' + productionArray[1] + '1';
+            return production
+        })
+        A2.nonTerminal = A2.nonTerminal.map(nTerminal => {
+            return nTerminal + "2"
+        })
+        A2.productions.map(production => {
+            production.from = production.from + '2'
+            let productionArray = production.to.split(' ') 
+            if(productionArray.length === 2)
+                production.to = productionArray[0] + ' ' + productionArray[1] + '2';
+            return production
+        })
+        let initial = 'S'
+        let initialProductionsS1 = A1.productions.filter(production => production.from === 'S1')
+        let initialProductionsS2 = A2.productions.filter(production => production.from === 'S2')
+        let productions = []
+        for(let i = 0; i < initialProductionsS1.length; ++i ) {
+            productions.push(new Production(initial,initialProductionsS1[i].to))
+        }
+        for(let i = 0; i < initialProductionsS2.length; ++i ) {
+            productions.push(new Production(initial,initialProductionsS2[i].to))
+        }
+        let newNonTerminal = [initial]
+        let newTerminal = A1.terminal
+        for(let i = 0 ; i < A1.nonTerminal.length; ++i) {
+            newNonTerminal.push(A1.nonTerminal[i])
+        }
+        for(let i = 0 ; i < A2.nonTerminal.length; ++i) {
+            newNonTerminal.push(A2.nonTerminal[i])
+        }
+        for(let i = 0 ; i < A2.terminal.length; ++i) {
+            if(newTerminal.indexOf(A2.terminal[i]) === -1)
+                newTerminal.push(A2.terminal[i])
+        }
+        A1.productions.forEach(production => {
+            productions.push(production)
+        })
+        A2.productions.forEach(production => {
+            productions.push(production)
+        })
+
+        let numberNonTerminal = 0;
+        newNonTerminal = newNonTerminal.map(nonTerminal => {
+            if(nonTerminal.search(/[0-9]/) !== -1) {
+                productions = productions.map(production => {
+                    if(production.from.search(nonTerminal) !== -1) {
+                        production.from = String.fromCharCode('a'.charCodeAt(0)+numberNonTerminal).toUpperCase()
+                    }
+                    if(production.to.search(nonTerminal) !== -1) {
+                        let productionArray = production.to.split(' ')
+                        production.to = productionArray[0] + ' ' + String.fromCharCode('a'.charCodeAt(0)+numberNonTerminal).toUpperCase()
+                    }
+                    return production
+                })
+                numberNonTerminal++;
+                return String.fromCharCode('a'.charCodeAt(0) + (numberNonTerminal-1) ).toUpperCase();
+            }
+            return nonTerminal
+        })
+
+        let regular = new Regular(newNonTerminal,newTerminal,productions,initial)
+        let automatoObject = regular.transformRegularToAutomato();
+        let automato = new Automato(automatoObject.states,automatoObject.alphabet,automatoObject.transitions,automatoObject.initial,automatoObject.finals)
+        automato.transitions = automato.transitions.map( transition => {
+            transition.to = automato.organizaOrdemStates(transition.to.split(',')).join(',')
+            return transition;
+        })
+        return automato
+    }
+
+
+    /*
+        Minimização com 3 passos
+        1 passo seria a verificação dos estados inalcançaveis e retirando-os
+        2 passo verificar os estados mortos e retirando-os
+        3 passo construir classe de equivalencia
+    */
+    minimizacao() {
+        let nonDeadAndReachableStates = this.nonDeadStates(this.reachableStates())
+        this.transitions = this.transitions.filter(transition => nonDeadAndReachableStates.indexOf(transition.from) !== -1)
+        this.states = this.states.filter(state => nonDeadAndReachableStates.indexOf(state) !== -1)
+        this.finals = this.finals.filter(final => nonDeadAndReachableStates.indexOf(final) !== -1)
+        this.equivalenceClass()
+    }
+
+    /*Constroi estados por classe de equivalencia*/
+    // equivalenceClass() {
+    //     //primeiro passo separar em duas classes de equivalencia de finais e de não finais
+    //     let classesEquivalencia = [this.states.filter(state => this.finals.indexOf(state) === -1),this.finals]
+    //     this.alphabet.forEach(symbol => {
+    //         for(let a = 0 ; a < classesEquivalencia.length; ++a) {
+    //             let classe = classesEquivalencia[a]
+    //             for(let i = 0 ; i < classe.length ; ++i) {
+    //                 let mesmaClasse = false;
+    //                 for(let j = 0; j < classe.length ; ++j) {
+    //                     if(i !== j) {
+    //                         let [transitionI] = this.transitions.filter(transition => (transition.from === classe[i] && transition.symbol === symbol))
+    //                         let [transitionJ] = this.transitions.filter(transition => (transition.from === classe[j] && transition.symbol === symbol))
+    //                         for(let k = 0 ; k < classesEquivalencia.length; ++k) {
+    //                             if(classesEquivalencia[k].indexOf(transitionI.to) !== -1 && classesEquivalencia[k].indexOf(transitionJ.to) !== -1) {
+    //                                 mesmaClasse = true
+    //                                 break;
+    //                             } 
+    //                         }
+    //                     }
+    //                 }
+    //                 if (mesmaClasse) {
+    //                     console.log(classe[i])
+    //                 } else {
+
+    //                 }
+    //             }
+    //         }
+    //     })
+    // }
+
+    /*retorna os estados alcançaveis*/
+    reachableStates() {
+        let reachebleStates = [this.initial]
+        for(let i = 0 ; i < reachebleStates.length; i++) {
+            let transitionsReach = this.transitions.filter(transition => reachebleStates[i] === transition.from)
+            transitionsReach.forEach(transition => {
+                if(reachebleStates.indexOf(transition.to) === -1)
+                    reachebleStates.push(transition.to)
+            })
+        }
+        return reachebleStates
+    }
+
+    /*retorna os estados que não são mortos*/
+    nonDeadStates(reachebleStates) {
+        let nonDeadStates = reachebleStates.filter(state => this.finals.indexOf(state) !== -1)
+        const possibleDeadStates = reachebleStates.filter(state => this.finals.indexOf(state) === -1)
+        for(let i = 0 ; i < possibleDeadStates.length ; ++i) {
+            const transitions = this.transitions.filter(transition => transition.from === possibleDeadStates[i])
+            let nonDead = false;
+            transitions.forEach(transition => {
+                if(nonDeadStates.indexOf(transition.to) !== -1 && nonDeadStates.indexOf(possibleDeadStates[i]) === -1)
+                    nonDead = true
+            })
+            if(nonDead) {
+                nonDeadStates.push(possibleDeadStates[i])
+            } else {
+                transitions.forEach(transition => {
+                    let states = this.checkDeadState(possibleDeadStates[i],nonDeadStates,transition.to,0)
+                    if(states)
+                        nonDeadStates = states
+                })
+            }
+        }
+        return nonDeadStates
+    }
+
+    /*Verifica se o suposto estado é um estado morto com recursão caso falhe na primeira tentativa*/
+    checkDeadState(possibleState,nonDeadStates,state,index) {
+        if(index < this.states.length)  { 
+            const transitions = this.transitions.filter(transition => transition.from === state)
+            transitions.forEach(transition => {
+                if(nonDeadStates.indexOf(transition.to) !== -1 && nonDeadStates.indexOf(possibleState) === -1) {
+                    return nonDeadStates.push(possibleState)
+                } else {
+                    index++
+                    this.checkDeadState(possibleState,nonDeadStates,transition.to,index)
+                }
+            })
+        } 
+        return
+    }
+
+
     transformToGramatica() {
         let regular = new Regular(['S'],this.alphabet,[],'S')
         if(!this.isDeterministic()) {
