@@ -1,15 +1,13 @@
 {
-  "files": {
-    "main.css": "/Formais/static/css/main.a6d8cc0d.chunk.css",
-    "main.js": "/Formais/static/js/main.da8a8411.chunk.js",
-    "main.js.map": "/Formais/static/js/main.da8a8411.chunk.js.map",
-    "runtime~main.js": "/Formais/static/js/runtime~main.5ed6db25.js",
-    "runtime~main.js.map": "/Formais/static/js/runtime~main.5ed6db25.js.map",
-    "static/js/2.f1940cfa.chunk.js": "/Formais/static/js/2.f1940cfa.chunk.js",
-    "static/js/2.f1940cfa.chunk.js.map": "/Formais/static/js/2.f1940cfa.chunk.js.map",
-    "index.html": "/Formais/index.html",
-    "precache-manifest.cc5e7a69843403e753c0bcbffc85ea6e.js": "/Formais/precache-manifest.cc5e7a69843403e753c0bcbffc85ea6e.js",
-    "service-worker.js": "/Formais/service-worker.js",
-    "static/css/main.a6d8cc0d.chunk.css.map": "/Formais/static/css/main.a6d8cc0d.chunk.css.map"
-  }
+  "main.css": "/Formais/static/css/main.e9655bc1.chunk.css",
+  "main.js": "/Formais/static/js/main.a42118ec.chunk.js",
+  "main.js.map": "/Formais/static/js/main.a42118ec.chunk.js.map",
+  "static/js/1.b1fbf849.chunk.js": "/Formais/static/js/1.b1fbf849.chunk.js",
+  "static/js/1.b1fbf849.chunk.js.map": "/Formais/static/js/1.b1fbf849.chunk.js.map",
+  "runtime~main.js": "/Formais/static/js/runtime~main.0b4fd59d.js",
+  "runtime~main.js.map": "/Formais/static/js/runtime~main.0b4fd59d.js.map",
+  "static/css/main.e9655bc1.chunk.css.map": "/Formais/static/css/main.e9655bc1.chunk.css.map",
+  "index.html": "/Formais/index.html",
+  "precache-manifest.fa759298a300e64b2a2c3b81e0fbe3bb.js": "/Formais/precache-manifest.fa759298a300e64b2a2c3b81e0fbe3bb.js",
+  "service-worker.js": "/Formais/service-worker.js"
 }
