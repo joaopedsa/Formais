@@ -2,23 +2,15 @@ const Production = require('./src/production')
 const LivreContexto = require('./src/livreContexto')
 
 function testeGRAfnd() {
-    let nonTerminal = ["S","A","B","C","D"]
-    let terminal = ["a","b","c"]
+    let nonTerminal = ["S","B","D"]
+    let terminal = ["b","c","d"]
     let productions = [
-        new Production("S","a S"),
-        new Production("S","b A"),
-        new Production("S","a B"),
-        new Production("A","a S"),
-        new Production("A","b S"),
-        new Production("A","c S"),
-        new Production("B","a S"),
-        new Production("B","b A"),
-        new Production("B","c B"),
-        new Production("C","c C"),
-        new Production("C","c"),
-        new Production("C","a D"),
-        new Production("D","a S"),
-        new Production("D","a"),
+        new Production("S","b c D"),
+        new Production("S","B c d"),
+        new Production("B","b B"),
+        new Production("B","b"),
+        new Production("D","d D"),
+        new Production("D","d"),
     ]
     let initial = "S"
     let livreContexto = new LivreContexto(nonTerminal,terminal,productions,initial)

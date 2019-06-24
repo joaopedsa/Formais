@@ -4,3 +4,9 @@ export const newGramatica = (gramatica) => {
         payload: gramatica
     }
 }
+
+export const fatoracao = () => {
+    return {
+        type: 'FATORACAO',
+    }
+}

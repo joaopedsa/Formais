@@ -3,7 +3,7 @@ import './gl.css'
 import Swal from 'sweetalert2';
 
 import Production from '../../models/production'
-import { newGramatica } from '../../actions/glActions'
+import { newGramatica, fatoracao } from '../../actions/glActions'
 
 import { connect } from 'react-redux'
 import LivreContexto from '../../models/livreContexto';
@@ -72,9 +72,10 @@ class gl extends Component {
         <div className="container-gr">
           <div className="container-buttons-menu-af">
             <button onClick={this.handleCreateSentenças}>Criar Produções</button>
+            <button onClick={this.props.fatoracao} >Fatoração</button>
             <button onClick={this.writeSingleFile}>Exportar</button>
-            <label htmlFor='selecao-arquivo-regular'>Importar</label>
-            <input id='selecao-arquivo-regular' type="file" onChange={this.readSingleFileRegular}/>
+            <label htmlFor='selecao-arquivo-livre'>Importar</label>
+            <input id='selecao-arquivo-livre' type="file" onChange={this.readSingleFileLivre}/>
           </div>
           <div className="container-gramatica">
             <div>  
@@ -97,4 +98,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps,{ newGramatica })(gl)
+export default connect(mapStateToProps,{ newGramatica,fatoracao })(gl)

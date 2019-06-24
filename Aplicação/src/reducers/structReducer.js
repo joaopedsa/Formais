@@ -29,7 +29,11 @@ switch (action.type) {
       let temp = state.regular.transformRegularToAutomato()
       let newAutomato = new Automato(temp.states,temp.alphabet,temp.transitions,temp.initial,temp.finals)
       return { ...state, automato: newAutomato }
-    default:  
+    case 'FATORACAO':
+      temp = state.livreContexto.fatoracao()
+      let newLivreContexto = new LivreContexto(temp.nonTerminal,temp.terminal,temp.productions,temp.initial)
+      return { ...state, livreContexto: newLivreContexto}
+    default:
       return state
     }
 }
