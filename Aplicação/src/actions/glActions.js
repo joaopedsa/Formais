@@ -10,3 +10,9 @@ export const fatoracao = () => {
         type: 'FATORACAO',
     }
 }
+
+export const recursao = () => {
+    return {
+        type: 'RECURSAO',
+    }
+}

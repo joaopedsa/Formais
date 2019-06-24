@@ -31,8 +31,10 @@ switch (action.type) {
       return { ...state, automato: newAutomato }
     case 'FATORACAO':
       temp = state.livreContexto.fatoracao()
-      let newLivreContexto = new LivreContexto(temp.nonTerminal,temp.terminal,temp.productions,temp.initial)
-      return { ...state, livreContexto: newLivreContexto}
+      return { ...state, livreContexto: new LivreContexto(temp.nonTerminal,temp.terminal,temp.productions,temp.initial)}
+    case 'RECURSAO':
+        temp = state.livreContexto.recursaoEsquerda()
+        return { ...state, livreContexto: new LivreContexto(temp.nonTerminal,temp.terminal,temp.productions,temp.initial)}
     default:
       return state
     }

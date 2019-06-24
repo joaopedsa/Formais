@@ -113,27 +113,26 @@ module.exports = class Automato {
         //primeiro passo separar em duas classes de equivalencia de finais e de não finais
         let classesEquivalencia = [this.states.filter(state => this.finals.indexOf(state) === -1),this.finals]
         this.alphabet.forEach(symbol => {
-            for(let a = 0 ; a < classesEquivalencia.length; ++a) {
-                let classe = classesEquivalencia[a]
-                for(let i = 0 ; i < classe.length ; ++i) {
-                    let mesmaClasse = false;
-                    for(let j = 0; j < classe.length ; ++j) {
-                        if(i !== j) {
-                            let [transitionI] = this.transitions.filter(transition => (transition.from === classe[i] && transition.symbol === symbol))
-                            let [transitionJ] = this.transitions.filter(transition => (transition.from === classe[j] && transition.symbol === symbol))
-                            for(let k = 0 ; k < classesEquivalencia.length; ++k) {
-                                if(classesEquivalencia[k].indexOf(transitionI.to) !== -1 && classesEquivalencia[k].indexOf(transitionJ.to) !== -1) {
-                                    mesmaClasse = true
-                                    break;
-                                } 
-                            }
-                        }
-                    }
-                    if (mesmaClasse) {
-                        console.log(classe[i])
+            for (let i = 0; i < classesEquivalencia.length; ++i) {
+                let newClasseEquivalencia = []
+                for (let j = 0; j < classesEquivalencia[i].length; ++j) {
+                    if(newClasseEquivalencia.length === 0) {
+                        newClasseEquivalencia.push([classesEquivalencia[i][j]])
                     } else {
-
+                        newClasseEquivalencia.forEach(classe => {
+                            classe.forEach(state => {
+                                let transitionClasse = this.transitions.filter(transition => transition.symbol === symbol && transition.from === state)
+                                let transitionPossivelClasse = this.transitions.filter(transition => transition.symbol === symbol && transition.from === classesEquivalencia[i][j])
+                                if(classesEquivalencia[i].indexOf(transitionClasse.to) === classesEquivalencia[i].indexOf(transitionPossivelClasse.to)) {
+                                    classe.push(classesEquivalencia[i][j])
+                                } else {
+                                    newClasseEquivalencia.push([classesEquivalencia[i][j]])
+                                }
+                            })
+                        })
+                        console.log(newClasseEquivalencia)
                     }
+                    
                 }
             }
         })
@@ -226,6 +225,29 @@ module.exports = class Automato {
         return regular
     }
 
+    reconhecimentoSentenca(sentenca) {
+        let sentencaArray = []
+        for (let i = 0; i < sentenca.length; ++i) {
+            sentencaArray.push(sentenca.substring(i,i+1))
+        }
+        let pertence = true
+        let stateAtual = this.initial
+        sentencaArray.forEach(terminal => {
+            let find = false
+            let transitionsStateAtual = this.transitions.filter(transition => transition.from === stateAtual)
+            transitionsStateAtual.forEach(transition => {
+                if(transition.symbol === terminal) {
+                    find = true
+                    stateAtual = transition.to
+                }
+            })
+            if(!find) {
+                pertence = false
+            }
+        })
+        return pertence
+    }
+
     determinize() {
         const fecho = this.fechoTransitivo()
         // Verifica se o automato é deterministico
@@ -239,36 +261,37 @@ module.exports = class Automato {
             } else {
                 newAutomato = new Automato(this.states,this.alphabet,[],this.initial,this.finals)
             }
-                for(let i = 0; i < newAutomato.states.length; i++) {
-                    const state = newAutomato.states[i]
-                    let states = state.split(',')
-                    let compareTransitions = []
-                    compareTransitions = this.transitions.filter(transition => {
-                        return states.indexOf(transition.from) > -1 && transition.symbol !== '&'
-                    })
-                    newAutomato.alphabet.forEach(symbol => {
-                        let newTransitions = compareTransitions.filter(transition => transition.symbol === symbol)
-                        let newTo = ''
-                        newTransitions.forEach(transition => {
-                            if(newTo) newTo = newTo + ',' + transition.to
-                            else newTo = transition.to
-                        })
-                        newTo = this.findToFecho(fecho,newTo)
-                        newAutomato.transitions = [...newAutomato.transitions,new Transition(state,newTo,symbol)]
-                        if(!newAutomato.states.includes(newTo) && newTo)
-                            newAutomato.states.push(newTo)
-                    })
-                }
-                newAutomato.states.forEach(state => {
-                    newAutomato.finals.forEach(final => {
-                        if(state.includes(final) && newAutomato.finals.indexOf(state) === -1)
-                            newAutomato.finals.push(state)
-                    })
+            for(let i = 0; i < newAutomato.states.length; i++) {
+                const state = newAutomato.states[i]
+                let states = state.split(',')
+                let compareTransitions = []
+                compareTransitions = this.transitions.filter(transition => {
+                    return states.indexOf(transition.from) > -1 && transition.symbol !== '&'
                 })
-                return newAutomato
+                newAutomato.alphabet.forEach(symbol => {
+                    let newTransitions = compareTransitions.filter(transition => transition.symbol === symbol)
+                    let newTo = ''
+                    newTransitions.forEach(transition => {
+                        if(newTo) newTo = newTo + ',' + transition.to
+                        else newTo = transition.to
+                    })
+                    newTo = this.findToFecho(fecho,newTo)
+                    newAutomato.transitions = [...newAutomato.transitions,new Transition(state,newTo,symbol)]
+                    if(!newAutomato.states.includes(newTo) && newTo)
+                        newAutomato.states.push(newTo)
+                })
             }
-            return this
+            newAutomato.states.forEach(state => {
+                newAutomato.finals.forEach(final => {
+                    if(state.includes(final) && newAutomato.finals.indexOf(state) === -1)
+                        newAutomato.finals.push(state)
+                })
+            })
+            return newAutomato
         }
+        return this
+    }
+
     findState() {
         let state = []
         this.transitions.forEach(transition => {
@@ -349,6 +372,7 @@ module.exports = class Automato {
         })
         return states;
     }
+
     organizaOrdemStates(state) {
         let newState = []
         this.states.forEach((to,index) => {
@@ -362,6 +386,7 @@ module.exports = class Automato {
         transition = this.transitions.filter(transition => transition.from === from && transition.symbol == symbol)
         return transition[0].to
     }
+
     setTransition(from, symbol, to) {
         let transitions = []
         let newAutomato = new Automato(this.states,this.alphabet,[],this.initial,this.finals)
@@ -377,6 +402,7 @@ module.exports = class Automato {
         newAutomato.transitions = transitions
         return newAutomato
     }
+
     setFinalState(state) {
         let newAutomato = new Automato(this.states,this.alphabet,this.transitions,this.initial,[])
         if(this.finals.indexOf(state) === -1) this.finals.push(state)
@@ -384,6 +410,7 @@ module.exports = class Automato {
         newAutomato.finals = this.finals
         return newAutomato;
     }
+
     setSymbol(lastSymbol, newSymbol) {
         let transitions = []
         let alphabet = []

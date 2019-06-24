@@ -3,7 +3,7 @@ import './gl.css'
 import Swal from 'sweetalert2';
 
 import Production from '../../models/production'
-import { newGramatica, fatoracao } from '../../actions/glActions'
+import { newGramatica, fatoracao, recursao } from '../../actions/glActions'
 
 import { connect } from 'react-redux'
 import LivreContexto from '../../models/livreContexto';
@@ -73,6 +73,7 @@ class gl extends Component {
           <div className="container-buttons-menu-af">
             <button onClick={this.handleCreateSentenças}>Criar Produções</button>
             <button onClick={this.props.fatoracao} >Fatoração</button>
+            <button onClick={this.props.recursao} >Recursão à esquerda</button>
             <button onClick={this.writeSingleFile}>Exportar</button>
             <label htmlFor='selecao-arquivo-livre'>Importar</label>
             <input id='selecao-arquivo-livre' type="file" onChange={this.readSingleFileLivre}/>
@@ -98,4 +99,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps,{ newGramatica,fatoracao })(gl)
+export default connect(mapStateToProps,{ newGramatica, fatoracao, recursao })(gl)

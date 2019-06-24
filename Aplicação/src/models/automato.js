@@ -109,35 +109,34 @@ export default class Automato {
     }
 
     /*Constroi estados por classe de equivalencia*/
-    // equivalenceClass() {
-    //     //primeiro passo separar em duas classes de equivalencia de finais e de não finais
-    //     let classesEquivalencia = [this.states.filter(state => this.finals.indexOf(state) === -1),this.finals]
-    //     this.alphabet.forEach(symbol => {
-    //         for(let a = 0 ; a < classesEquivalencia.length; ++a) {
-    //             let classe = classesEquivalencia[a]
-    //             for(let i = 0 ; i < classe.length ; ++i) {
-    //                 let mesmaClasse = false;
-    //                 for(let j = 0; j < classe.length ; ++j) {
-    //                     if(i !== j) {
-    //                         let [transitionI] = this.transitions.filter(transition => (transition.from === classe[i] && transition.symbol === symbol))
-    //                         let [transitionJ] = this.transitions.filter(transition => (transition.from === classe[j] && transition.symbol === symbol))
-    //                         for(let k = 0 ; k < classesEquivalencia.length; ++k) {
-    //                             if(classesEquivalencia[k].indexOf(transitionI.to) !== -1 && classesEquivalencia[k].indexOf(transitionJ.to) !== -1) {
-    //                                 mesmaClasse = true
-    //                                 break;
-    //                             } 
-    //                         }
-    //                     }
-    //                 }
-    //                 if (mesmaClasse) {
-    //                     console.log(classe[i])
-    //                 } else {
-
-    //                 }
-    //             }
-    //         }
-    //     })
-    // }
+    equivalenceClass() {
+        //primeiro passo separar em duas classes de equivalencia de finais e de não finais
+        let classesEquivalencia = [this.states.filter(state => this.finals.indexOf(state) === -1),this.finals]
+        this.alphabet.forEach(symbol => {
+            for (let i = 0; i < classesEquivalencia.length; ++i) {
+                let newClasseEquivalencia = []
+                for (let j = 0; j < classesEquivalencia[i].length; ++j) {
+                    if(newClasseEquivalencia.length === 0) {
+                        newClasseEquivalencia.push([classesEquivalencia[i][j]])
+                    } else {
+                        newClasseEquivalencia.forEach(classe => {
+                            classe.forEach(state => {
+                                let transitionClasse = this.transitions.filter(transition => transition.symbol === symbol && transition.from === state)
+                                let transitionPossivelClasse = this.transitions.filter(transition => transition.symbol === symbol && transition.from === classesEquivalencia[i][j])
+                                if(classesEquivalencia[i].indexOf(transitionClasse.to) === classesEquivalencia[i].indexOf(transitionPossivelClasse.to)) {
+                                    classe.push(classesEquivalencia[i][j])
+                                } else {
+                                    newClasseEquivalencia.push([classesEquivalencia[i][j]])
+                                }
+                            })
+                        })
+                        console.log(newClasseEquivalencia)
+                    }
+                    
+                }
+            }
+        })
+    }
 
     /*retorna os estados alcançaveis*/
     reachableStates() {
@@ -225,6 +224,29 @@ export default class Automato {
             if(!exist) regular.productions.push(new Production(nTerminal,''))
         })
         return regular
+    }
+
+    reconhecimentoSentenca(sentenca) {
+        let sentencaArray = []
+        for (let i = 0; i < sentenca.length; ++i) {
+            sentencaArray.push(sentenca.substring(i,i+1))
+        }
+        let pertence = true
+        let stateAtual = this.initial
+        sentencaArray.forEach(terminal => {
+            let find = false
+            let transitionsStateAtual = this.transitions.filter(transition => transition.from === stateAtual)
+            transitionsStateAtual.forEach(transition => {
+                if(transition.symbol === terminal) {
+                    find = true
+                    stateAtual = transition.to
+                }
+            })
+            if(!find) {
+                pertence = false
+            }
+        })
+        return pertence
     }
 
     determinize() {

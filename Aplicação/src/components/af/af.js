@@ -140,12 +140,40 @@ class af extends Component {
     }
   }
 
+  handleSentenca = async () => {
+    this.props.determinize()
+    let {value: input} = await Swal.fire({
+      title: 'insira a nova Entrada',
+      input: 'text',
+      showCancelButton: true,
+      inputValidator: (value) => {
+      if (!value || (this.props.automato2.alphabet.indexOf(value) !== -1) ) {
+          return 'Insira um valor para entrada ou valor que seja diferente'
+      }
+      }
+  })
+  if (input) {
+      if(this.props.automato.reconhecimentoSentenca(input)) {
+        Swal.fire({
+          title: 'Pertence',
+          type: 'success'
+        })
+      } else {
+        Swal.fire({
+          title: 'Não Pertence',
+          type: 'error'
+        })
+      }
+  }
+  }
+
 
   render() {
     return (
       <div>
         <div className="container-buttons-menu-af">
           <button onClick={this.props.determinize}>Determinize</button>
+          <button onClick={this.handleSentenca}>Reconhecimento de Sentenca</button>
           <button onClick={this.handleCreateTable}>Criar Tabela de Transição</button>
           <button onClick={() => this.handleCreateTable(2)}>Criar Tabela de Transição 2</button>
           <button onClick={this.handleCreateTable}>Minimização</button>
